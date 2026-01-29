@@ -1,6 +1,10 @@
 import request from "supertest";
 import { app } from "../app";
 
+/**
+ * Integration test for the salary calculation API.
+ */
+
 describe("POST /api/v1/salary/calculate", () => {
   it("returns calculation result with breakdown", async () => {
     const response = await request(app)
@@ -14,6 +18,7 @@ describe("POST /api/v1/salary/calculate", () => {
         churchMember: false,
         childrenCount: 0,
         annualAllowance: 0,
+        healthInsuranceType: "statutory",
         healthInsuranceRate: 7.3,
         pensionRegion: "West",
       });

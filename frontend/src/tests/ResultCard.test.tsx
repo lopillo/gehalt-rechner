@@ -1,6 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import ResultCard from "../components/ResultCard";
 
+/**
+ * Ensures the result card renders summary values.
+ */
+
 describe("ResultCard", () => {
   it("renders net salary value", () => {
     render(

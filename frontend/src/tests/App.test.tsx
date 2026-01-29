@@ -3,6 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import App from "../App";
 
+/**
+ * Frontend integration test for form submission.
+ */
+
 describe("App", () => {
   it("submits the form with the expected payload", async () => {
     const user = userEvent.setup();
@@ -42,6 +46,9 @@ describe("App", () => {
         headers: { "Content-Type": "application/json" },
         body: expect.stringContaining("\"grossAmount\":6000"),
       })
+    );
+    expect(fetchSpy.mock.calls[0][1]?.body).toContain(
+      "\"healthInsuranceType\":\"statutory\""
     );
   });
 });

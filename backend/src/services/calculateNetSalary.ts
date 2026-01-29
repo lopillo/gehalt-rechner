@@ -1,5 +1,12 @@
 import { SalaryInput, SalaryResult } from "../types";
 
+/**
+ * Salary calculation utilities and rules for the backend service.
+ * The logic is intentionally simplified for educational purposes.
+ */
+
+const STATUTORY_HEALTH_RATE = 7.3;
+
 const roundCurrency = (value: number) =>
   Math.round((value + Number.EPSILON) * 100) / 100;
 
@@ -12,9 +19,17 @@ const taxClassRateMap: Record<SalaryInput["taxClass"], number> = {
   6: 0.34,
 };
 
+/**
+ * Returns the church tax rate based on the selected federal state.
+ * BY and BW use 8%, all other states use 9%.
+ */
 const getChurchTaxRate = (federalState: SalaryInput["federalState"]) =>
   federalState === "BY" || federalState === "BW" ? 0.08 : 0.09;
 
+/**
+ * Returns the pension insurance rate.
+ * "None" disables pension insurance.
+ */
 const getPensionRate = (region: SalaryInput["pensionRegion"]) => {
   if (region === "None") {
     return 0;
@@ -22,6 +37,10 @@ const getPensionRate = (region: SalaryInput["pensionRegion"]) => {
   return 0.093;
 };
 
+/**
+ * Calculates a simplified net salary and deduction breakdown.
+ * This is an educational model and not official tax advice.
+ */
 export const calculateNetSalary = (input: SalaryInput): SalaryResult => {
   const allowance = input.annualAllowance ?? 0;
   const annualGross =
@@ -34,7 +53,11 @@ export const calculateNetSalary = (input: SalaryInput): SalaryResult => {
     ? incomeTax * getChurchTaxRate(input.federalState)
     : 0;
 
-  const healthInsurance = annualGross * (input.healthInsuranceRate / 100);
+  const healthRate =
+    input.healthInsuranceType === "private"
+      ? input.healthInsuranceRate ?? 0
+      : STATUTORY_HEALTH_RATE;
+  const healthInsurance = annualGross * (healthRate / 100);
   const pensionInsurance = annualGross * getPensionRate(input.pensionRegion);
   const unemploymentInsurance = annualGross * 0.013;
   const nursingCareInsurance = annualGross * 0.017;

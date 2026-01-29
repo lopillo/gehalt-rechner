@@ -1,3 +1,7 @@
+/**
+ * Shared backend types for the salary calculator.
+ * These types define the API contract used by the backend services.
+ */
 export type SalaryPeriod = "monthly" | "yearly";
 
 export type PensionRegion = "West" | "East" | "None";

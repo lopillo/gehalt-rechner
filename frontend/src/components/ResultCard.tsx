@@ -1,5 +1,9 @@
 import { SalaryResult } from "../types";
 
+/**
+ * Displays the net salary and deduction breakdown.
+ */
+
 interface ResultCardProps {
   result: SalaryResult;
 }

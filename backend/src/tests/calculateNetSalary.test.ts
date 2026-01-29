@@ -1,5 +1,9 @@
 import { calculateNetSalary } from "../services/calculateNetSalary";
 
+/**
+ * Unit tests for the salary calculation service.
+ */
+
 const baseInput = {
   year: 2025,
   grossAmount: 5000,
@@ -9,6 +13,7 @@ const baseInput = {
   churchMember: false,
   childrenCount: 0,
   annualAllowance: 0,
+  healthInsuranceType: "statutory" as const,
   healthInsuranceRate: 7.3,
   pensionRegion: "West" as const,
 };

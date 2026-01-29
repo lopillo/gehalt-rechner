@@ -1,5 +1,9 @@
+/**
+ * Shared frontend types for the salary calculator UI.
+ */
 export type SalaryPeriod = "monthly" | "yearly";
 export type PensionRegion = "West" | "East" | "None";
+export type HealthInsuranceType = "statutory" | "private";
 export type FederalState =
   | "BW"
   | "BY"
@@ -27,7 +31,8 @@ export interface SalaryInput {
   churchMember: boolean;
   childrenCount: number;
   annualAllowance?: number;
-  healthInsuranceRate: number;
+  healthInsuranceType: HealthInsuranceType;
+  healthInsuranceRate?: number;
   pensionRegion: PensionRegion;
 }
 
