@@ -1,10 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import ResultCard from "./components/ResultCard";
 import { SalaryInput, SalaryResult } from "./types";
 
-/**
- * Main SPA screen: collects input and displays salary results.
- */
 const initialForm: SalaryInput = {
   year: 2025,
   grossAmount: 5000,
@@ -14,7 +11,6 @@ const initialForm: SalaryInput = {
   churchMember: false,
   childrenCount: 0,
   annualAllowance: 0,
-  healthInsuranceType: "statutory",
   healthInsuranceRate: 7.3,
   pensionRegion: "West",
 };

@@ -115,8 +115,6 @@ The application is implemented as a **full-stack system**, fully containerized u
 - `docs/architecture.md`: C4-style container architecture (diagram included).
 - `docs/process.md`: Scrum-inspired process model and justification.
 - `docs/reflection.md`: Critical evaluation, lessons learned, and improvements.
-- `docs/wireframes/`: UI wireframes (calculator + info page).
-- `docs/diagrams/`: Architecture diagram assets and indexes.
 
 ---
 

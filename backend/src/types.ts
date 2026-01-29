@@ -6,8 +6,6 @@ export type SalaryPeriod = "monthly" | "yearly";
 
 export type PensionRegion = "West" | "East" | "None";
 
-export type HealthInsuranceType = "statutory" | "private";
-
 export type FederalState =
   | "BW"
   | "BY"
@@ -35,8 +33,7 @@ export interface SalaryInput {
   churchMember: boolean;
   childrenCount: number;
   annualAllowance?: number | undefined;
-  healthInsuranceType: HealthInsuranceType;
-  healthInsuranceRate?: number | undefined;
+  healthInsuranceRate: number;
   pensionRegion: PensionRegion;
 }
 
