@@ -8,7 +8,6 @@ export const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Validates salary input and returns a simplified net salary calculation.
 app.post("/api/v1/salary/calculate", (req, res) => {
   const parseResult = salaryInputSchema.safeParse(req.body);
 

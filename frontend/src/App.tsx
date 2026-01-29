@@ -47,7 +47,6 @@ const App = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Sends the SalaryInput payload to the backend API.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);

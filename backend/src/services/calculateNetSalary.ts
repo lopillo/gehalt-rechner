@@ -12,17 +12,9 @@ const taxClassRateMap: Record<SalaryInput["taxClass"], number> = {
   6: 0.34,
 };
 
-/**
- * Returns the church tax rate based on the selected federal state.
- * BY and BW use 8%, all other states use 9%.
- */
 const getChurchTaxRate = (federalState: SalaryInput["federalState"]) =>
   federalState === "BY" || federalState === "BW" ? 0.08 : 0.09;
 
-/**
- * Returns the pension insurance rate.
- * "None" disables pension insurance.
- */
 const getPensionRate = (region: SalaryInput["pensionRegion"]) => {
   if (region === "None") {
     return 0;
@@ -30,10 +22,6 @@ const getPensionRate = (region: SalaryInput["pensionRegion"]) => {
   return 0.093;
 };
 
-/**
- * Calculates a simplified net salary and deduction breakdown.
- * This is an educational model and not official tax advice.
- */
 export const calculateNetSalary = (input: SalaryInput): SalaryResult => {
   const allowance = input.annualAllowance ?? 0;
   const annualGross =
