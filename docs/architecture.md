@@ -19,6 +19,21 @@ The system architecture is described using a **C4-inspired container-level model
 
 This level of abstraction is appropriate for explaining system structure without unnecessary implementation detail.
 
+### C4 Container Diagram (Mermaid)
+
+```mermaid
+flowchart LR
+  user[User in Browser]
+  frontend[Frontend Container<br/>React SPA + Nginx]
+  backend[Backend Container<br/>Node.js + Express API]
+  compose[Docker Compose]
+
+  user -->|HTTP| frontend
+  frontend -->|POST /api/v1/salary/calculate| backend
+  compose --> frontend
+  compose --> backend
+```
+
 ---
 
 ## 3. System Overview 🌐
