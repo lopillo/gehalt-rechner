@@ -108,6 +108,83 @@ The application is implemented as a **full-stack system**, fully containerized u
 
 ---
 
+## 📚 Documentation Map
+
+- `docs/concept.md`: Problem statement, users, benefits, scope, and tech choices.
+- `docs/requirements.md`: Functional, non-functional, and testing requirements.
+- `docs/architecture.md`: C4-style container architecture (diagram included).
+- `docs/process.md`: Scrum-inspired process model and justification.
+- `docs/reflection.md`: Critical evaluation, lessons learned, and improvements.
+
+---
+
+## 🚀 Quick Start
+
+Run the full stack locally with Docker Compose:
+
+```bash
+docker-compose up --build
+```
+
+Open the app at:
+
+- http://localhost:3000
+
+---
+
+## 🔌 API Contract
+
+**Endpoint**
+
+- `POST /api/v1/salary/calculate`
+
+**Request Body**
+
+```json
+{
+  "year": 2025,
+  "grossAmount": 5000,
+  "period": "monthly",
+  "taxClass": 1,
+  "federalState": "BE",
+  "churchMember": false,
+  "childrenCount": 0,
+  "annualAllowance": 0,
+  "healthInsuranceRate": 7.3,
+  "pensionRegion": "West"
+}
+```
+
+**Response Body**
+
+```json
+{
+  "net": 3200,
+  "breakdown": {
+    "incomeTax": 500,
+    "churchTax": 0,
+    "solidarityTax": 20,
+    "healthInsurance": 300,
+    "pensionInsurance": 200,
+    "unemploymentInsurance": 50,
+    "nursingCareInsurance": 40
+  }
+}
+```
+
+---
+
+## ✅ Tests
+
+Backend tests:
+
+```bash
+cd backend
+npm test
+```
+
+---
+
 ## 🐳 Docker & Deployment
 
 The entire system runs locally using **Docker Compose**:
