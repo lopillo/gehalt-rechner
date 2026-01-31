@@ -24,6 +24,6 @@ describe("ResultCard", () => {
       />
     );
 
-    expect(screen.getByText(/€3,200/i)).toBeInTheDocument();
+    expect(screen.getByText(/3200,00\s?€/i)).toBeInTheDocument();
   });
 });
