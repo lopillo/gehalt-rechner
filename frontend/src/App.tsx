@@ -10,6 +10,7 @@ import ResultCard from "./components/ResultCard";
 import { formatMoneyValue, parseMoneyValue } from "./utils/formatters";
 import { FederalState, PensionRegion, SalaryInput, SalaryResult } from "./types";
 
+// Map each federal state to its pension region so we can derive defaults.
 const pensionRegionByState: Record<FederalState, PensionRegion> = {
   BW: "West",
   BY: "West",
@@ -29,9 +30,11 @@ const pensionRegionByState: Record<FederalState, PensionRegion> = {
   TH: "East",
 };
 
+// Helper to read the pension region for a selected state.
 const getPensionRegionForState = (state: FederalState): PensionRegion =>
   pensionRegionByState[state];
 
+// Default values for the form when the page loads.
 const initialForm: SalaryInput = {
   year: 2025,
   grossAmount: 5000,
@@ -46,6 +49,7 @@ const initialForm: SalaryInput = {
   pensionRegion: getPensionRegionForState("BE"),
 };
 
+// List of states for the dropdown options.
 const federalStates = [
   { code: "BW", name: "Baden-Württemberg" },
   { code: "BY", name: "Bavaria" },
@@ -66,6 +70,7 @@ const federalStates = [
 ] as const;
 
 const App = () => {
+  // Store the form data and the formatted input strings shown to the user.
   const [formData, setFormData] = useState<SalaryInput>(initialForm);
   const [grossAmountInput, setGrossAmountInput] = useState(
     formatMoneyValue(initialForm.grossAmount)
@@ -73,6 +78,7 @@ const App = () => {
   const [annualAllowanceInput, setAnnualAllowanceInput] = useState(
     formatMoneyValue(initialForm.annualAllowance ?? 0)
   );
+  // Store the calculation result plus UI states.
   const [result, setResult] = useState<SalaryResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,6 +87,7 @@ const App = () => {
   >({});
   const resultsRef = useRef<HTMLDivElement | null>(null);
 
+  // Derive labels and flags from current form selections.
   const showPrivateHealthRate = formData.healthInsuranceType === "private";
   const healthRateLabel = useMemo(
     () =>
@@ -95,6 +102,7 @@ const App = () => {
   );
   const getFieldError = (field: keyof SalaryInput) => formErrors[field];
 
+  // Validate the form with simple, user-friendly rules.
   const validateForm = (values: SalaryInput) => {
     const errors: Partial<Record<keyof SalaryInput, string>> = {};
 
@@ -143,6 +151,7 @@ const App = () => {
     return errors;
   };
 
+  // Update multiple fields at once and re-check errors if needed.
   const updateFields = (updates: Partial<SalaryInput>) => {
     setFormData((prev) => {
       const next = { ...prev, ...updates };
@@ -156,6 +165,7 @@ const App = () => {
     });
   };
 
+  // Helper to update one field at a time.
   const updateField = <K extends keyof SalaryInput>(
     field: K,
     value: SalaryInput[K]
@@ -163,6 +173,7 @@ const App = () => {
     updateFields({ [field]: value } as Partial<SalaryInput>);
   };
 
+  // Update state + pension region together when the state changes.
   const handleFederalStateChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -173,6 +184,7 @@ const App = () => {
     });
   };
 
+  // Keep money input strings and numeric values in sync.
   const handleMoneyChange =
     (
       field: "grossAmount" | "annualAllowance",
@@ -184,6 +196,7 @@ const App = () => {
       updateField(field, parseMoneyValue(nextValue) as SalaryInput[typeof field]);
     };
 
+  // Format money values when the user leaves the field.
   const handleMoneyBlur =
     (
       field: "grossAmount" | "annualAllowance",
@@ -193,7 +206,7 @@ const App = () => {
       setDisplayValue(formatMoneyValue(formData[field] ?? 0));
     };
 
-  // Sends the SalaryInput payload to the backend API.
+  // Send the form data to the backend and store the result.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -228,12 +241,14 @@ const App = () => {
     }
   };
 
+  // Scroll to the result card after a successful calculation.
   useEffect(() => {
     if (result && resultsRef.current) {
       resultsRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [result]);
 
+  // Keep the default private insurance rate in a sensible range.
   useEffect(() => {
     setFormData((prev) => {
       if (prev.healthInsuranceType === "statutory") {

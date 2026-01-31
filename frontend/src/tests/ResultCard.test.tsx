@@ -1,3 +1,4 @@
+// Component tests for the ResultCard output.
 import { render, screen } from "@testing-library/react";
 import ResultCard from "../components/ResultCard";
 
@@ -7,6 +8,7 @@ import ResultCard from "../components/ResultCard";
 
 describe("ResultCard", () => {
   it("renders net salary value", () => {
+    // Render with a simple result payload.
     render(
       <ResultCard
         result={{

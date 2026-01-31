@@ -1,9 +1,11 @@
+// Zod schema definitions for input/output validation.
 import { z } from "zod";
 
 /**
  * Validates incoming salary calculator payloads.
  * Enforces required fields and basic constraints for API safety.
  */
+// Base schema for the incoming salary request payload.
 export const salaryInputSchema = z.object({
   year: z.number().int().min(2000).max(2100),
   grossAmount: z.number().positive(),
@@ -40,6 +42,7 @@ export const salaryInputSchema = z.object({
   healthInsuranceType: z.enum(["statutory", "private"]),
   healthInsuranceRate: z.number().min(0).max(20).optional(),
   pensionRegion: z.enum(["West", "East", "None"]),
+  // Add extra validation that depends on multiple fields.
 }).superRefine((values, ctx) => {
   if (values.healthInsuranceType === "private" && !values.healthInsuranceRate) {
     ctx.addIssue({
@@ -50,11 +53,13 @@ export const salaryInputSchema = z.object({
   }
 });
 
+// TypeScript type inferred from the input schema.
 export type SalaryInput = z.infer<typeof salaryInputSchema>;
 
 /**
  * Shape of the result returned to the frontend.
  */
+// Schema for the response object returned to the client.
 export const SalaryResultSchema = z.object({
   net: z.number(),
   breakdown: z.object({
@@ -68,4 +73,5 @@ export const SalaryResultSchema = z.object({
   }),
 });
 
+// TypeScript type inferred from the result schema.
 export type SalaryResult = z.infer<typeof SalaryResultSchema>;

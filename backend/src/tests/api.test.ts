@@ -1,3 +1,4 @@
+// API integration test for the salary endpoint.
 import request from "supertest";
 import { app } from "../app";
 
@@ -7,6 +8,7 @@ import { app } from "../app";
 
 describe("POST /api/v1/salary/calculate", () => {
   it("returns calculation result with breakdown", async () => {
+    // Send a valid request payload.
     const response = await request(app)
       .post("/api/v1/salary/calculate")
       .send({
@@ -23,6 +25,7 @@ describe("POST /api/v1/salary/calculate", () => {
         pensionRegion: "West",
       });
 
+    // Expect the API to return a result with deductions.
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("net");
     expect(response.body).toHaveProperty("breakdown");
