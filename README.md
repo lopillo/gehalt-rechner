@@ -300,8 +300,20 @@ E2E_BACKEND_URL=http://host.docker.internal:4000 \
 npm run test:e2e
 ```
 
+If the Docker Compose stack is already running, you can skip Playwright's
+dev-server bootstrapping entirely:
+
+```bash
+cd frontend
+E2E_FRONTEND_URL=http://host.docker.internal:3000 \
+E2E_BACKEND_URL=http://host.docker.internal:4000 \
+E2E_SKIP_WEB_SERVER=true \
+npm run test:e2e
+```
+
 You can keep the existing Docker Compose stack running; Playwright will reuse
-the reachable servers when `reuseExistingServer` is enabled.
+the reachable servers when `reuseExistingServer` is enabled (or skip the
+webServer entirely when `E2E_SKIP_WEB_SERVER=true`).
 
 ---
 
