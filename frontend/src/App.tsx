@@ -1,5 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import ResultCard from "./components/ResultCard";
+import { formatMoneyValue, parseMoneyValue } from "./utils/formatters";
 import { SalaryInput, SalaryResult } from "./types";
 
 const initialForm: SalaryInput = {
@@ -37,6 +45,12 @@ const federalStates = [
 
 const App = () => {
   const [formData, setFormData] = useState<SalaryInput>(initialForm);
+  const [grossAmountInput, setGrossAmountInput] = useState(
+    formatMoneyValue(initialForm.grossAmount)
+  );
+  const [annualAllowanceInput, setAnnualAllowanceInput] = useState(
+    formatMoneyValue(initialForm.annualAllowance ?? 0)
+  );
   const [result, setResult] = useState<SalaryResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -119,6 +133,26 @@ const App = () => {
     });
   };
 
+  const handleMoneyChange =
+    (
+      field: "grossAmount" | "annualAllowance",
+      setDisplayValue: Dispatch<SetStateAction<string>>
+    ) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const nextValue = event.target.value;
+      setDisplayValue(nextValue);
+      updateField(field, parseMoneyValue(nextValue) as SalaryInput[typeof field]);
+    };
+
+  const handleMoneyBlur =
+    (
+      field: "grossAmount" | "annualAllowance",
+      setDisplayValue: Dispatch<SetStateAction<string>>
+    ) =>
+    () => {
+      setDisplayValue(formatMoneyValue(formData[field] ?? 0));
+    };
+
   // Sends the SalaryInput payload to the backend API.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -184,18 +218,24 @@ const App = () => {
             <h2>Inputs</h2>
             <label>
               Gross amount
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.grossAmount}
-                onChange={(event) =>
-                  updateField("grossAmount", Number(event.target.value))
-                }
-                className={getFieldError("grossAmount") ? "input-error" : ""}
-                aria-invalid={Boolean(getFieldError("grossAmount"))}
-                aria-describedby="gross-amount-error"
-              />
+              <div className="input-with-suffix">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={grossAmountInput}
+                  onChange={handleMoneyChange(
+                    "grossAmount",
+                    setGrossAmountInput
+                  )}
+                  onBlur={handleMoneyBlur("grossAmount", setGrossAmountInput)}
+                  className={getFieldError("grossAmount") ? "input-error" : ""}
+                  aria-invalid={Boolean(getFieldError("grossAmount"))}
+                  aria-describedby="gross-amount-error"
+                />
+                <span className="input-suffix" aria-hidden="true">
+                  €
+                </span>
+              </div>
               {getFieldError("grossAmount") ? (
                 <span id="gross-amount-error" className="field-error">
                   {getFieldError("grossAmount")}
@@ -284,18 +324,29 @@ const App = () => {
             </label>
             <label>
               Annual allowance
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.annualAllowance ?? 0}
-                onChange={(event) =>
-                  updateField("annualAllowance", Number(event.target.value))
-                }
-                className={getFieldError("annualAllowance") ? "input-error" : ""}
-                aria-invalid={Boolean(getFieldError("annualAllowance"))}
-                aria-describedby="annual-allowance-error"
-              />
+              <div className="input-with-suffix">
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={annualAllowanceInput}
+                  onChange={handleMoneyChange(
+                    "annualAllowance",
+                    setAnnualAllowanceInput
+                  )}
+                  onBlur={handleMoneyBlur(
+                    "annualAllowance",
+                    setAnnualAllowanceInput
+                  )}
+                  className={
+                    getFieldError("annualAllowance") ? "input-error" : ""
+                  }
+                  aria-invalid={Boolean(getFieldError("annualAllowance"))}
+                  aria-describedby="annual-allowance-error"
+                />
+                <span className="input-suffix" aria-hidden="true">
+                  €
+                </span>
+              </div>
               {getFieldError("annualAllowance") ? (
                 <span id="annual-allowance-error" className="field-error">
                   {getFieldError("annualAllowance")}

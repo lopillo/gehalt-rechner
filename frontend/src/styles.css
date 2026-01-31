@@ -64,6 +64,21 @@ form label {
   margin-bottom: 16px;
 }
 
+.input-with-suffix {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-with-suffix input {
+  flex: 1;
+}
+
+.input-suffix {
+  font-weight: 600;
+  color: #4b5563;
+}
+
 input,
 select,
 button {
