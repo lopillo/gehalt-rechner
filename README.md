@@ -139,6 +139,76 @@ docker-compose down
 
 ---
 
+## ✅ Tests
+
+### Backend
+
+The backend suite includes **unit** and **integration** tests (Jest + Supertest).
+
+Run all backend tests:
+
+```bash
+cd backend
+npm test
+```
+
+Run a specific backend test file:
+
+```bash
+cd backend
+npm test -- calculateNetSalary.test.ts
+npm test -- api.test.ts
+```
+
+### Frontend
+
+Frontend tests include **unit/component** tests (Vitest + Testing Library) and
+**end-to-end (E2E)** tests (Playwright).
+
+Run frontend unit/component tests:
+
+```bash
+cd frontend
+npm install
+npm run test
+```
+
+Run E2E tests:
+
+```bash
+cd frontend
+npm install
+```
+
+If Playwright browsers are not installed yet, run this once:
+
+```bash
+npx playwright install
+```
+
+Then run the E2E suite:
+
+```bash
+npm run test:e2e
+```
+
+---
+
+## 🐳 Docker & Deployment
+
+The entire system runs locally using **Docker Compose**:
+
+- Frontend container:
+  - React build served via Nginx
+- Backend container:
+  - Node.js API server
+- One command to run everything:
+  ```bash
+  docker-compose up --build
+  ```
+
+---
+
 ## 🔌 API Contract
 
 **Endpoint**
@@ -219,113 +289,3 @@ Alternative minimal example:
   ]
 }
 ```
-
----
-
-## ✅ Tests
-
-### Backend
-
-The backend suite includes **unit** and **integration** tests (Jest + Supertest).
-
-Run all backend tests:
-
-```bash
-cd backend
-npm test
-```
-
-Run a specific backend test file:
-
-```bash
-cd backend
-npm test -- calculateNetSalary.test.ts
-npm test -- api.test.ts
-```
-
-### Frontend
-
-Frontend tests include **unit/component** tests (Vitest + Testing Library) and
-**end-to-end (E2E)** tests (Playwright).
-
-Run frontend unit/component tests:
-
-```bash
-cd frontend
-npm install
-npm run test
-```
-
-Run E2E tests (start the frontend and backend manually, then run Playwright):
-
-```bash
-cd frontend
-npm install
-```
-
-Start the backend in a separate terminal:
-
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-Start the frontend in another terminal:
-
-```bash
-cd frontend
-npm run dev -- --host --port 3000
-```
-
-Finally, run the E2E tests:
-
-```bash
-cd frontend
-npm run test:e2e
-```
-
-#### Running E2E tests against Docker
-
-Playwright waits for both the frontend and backend URLs configured in
-`frontend/playwright.config.ts`. When the app runs in Docker, make sure those
-URLs resolve on your host. If `localhost` does not reach the containers (common
-with some Docker Desktop + Git Bash setups), point Playwright to the Docker host
-explicitly:
-
-```bash
-cd frontend
-E2E_FRONTEND_URL=http://host.docker.internal:3000 \
-E2E_BACKEND_URL=http://host.docker.internal:4000 \
-npm run test:e2e
-```
-
-If the Docker Compose stack is already running, you can skip Playwright's
-dev-server bootstrapping entirely:
-
-```bash
-cd frontend
-E2E_FRONTEND_URL=http://host.docker.internal:3000 \
-E2E_BACKEND_URL=http://host.docker.internal:4000 \
-E2E_SKIP_WEB_SERVER=true \
-npm run test:e2e
-```
-
-You can keep the existing Docker Compose stack running; Playwright will reuse
-the reachable servers when `reuseExistingServer` is enabled (or skip the
-webServer entirely when `E2E_SKIP_WEB_SERVER=true`).
-
----
-
-## 🐳 Docker & Deployment
-
-The entire system runs locally using **Docker Compose**:
-
-- Frontend container:
-  - React build served via Nginx
-- Backend container:
-  - Node.js API server
-- One command to run everything:
-  ```bash
-  docker-compose up --build
-  ```
