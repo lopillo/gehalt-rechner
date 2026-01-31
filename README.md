@@ -174,8 +174,28 @@ Open the app at:
 
 ### API error handling
 
-If validation fails, the API returns a `400` response with a message and an array
-of Zod issues.
+If validation fails, the API responds with **HTTP 400 (Bad Request)** and a JSON
+body containing a summary message plus an array of Zod issues.
+
+```json
+{
+  "statusCode": 400,
+  "error": "Bad Request",
+  "message": "Invalid input data",
+  "issues": [
+    {
+      "code": "too_small",
+      "minimum": 0,
+      "type": "number",
+      "inclusive": true,
+      "message": "Number must be greater than 0",
+      "path": ["grossAmount"]
+    }
+  ]
+}
+```
+
+Alternative minimal example:
 
 ```json
 {
