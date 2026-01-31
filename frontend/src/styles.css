@@ -4,7 +4,7 @@
 :root {
   font-family: "Inter", system-ui, sans-serif;
   color: #1e1b4b;
-  background: linear-gradient(160deg, #fef3c7 0%, #dbeafe 45%, #fce7f3 100%);
+  background: linear-gradient(160deg, #f6ebc1 0%, #d4e2f6 45%, #f4e0eb 100%);
 }
 
 * {
@@ -49,7 +49,7 @@ main {
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(247, 247, 247, 0.86);
   border-radius: 20px;
   padding: 28px;
   box-shadow: 0 18px 45px rgba(30, 27, 75, 0.12);
@@ -91,7 +91,7 @@ button {
   padding: 12px 14px;
   border-radius: 12px;
   border: 1px solid #c7d2fe;
-  background: #ffffff;
+  background: #f7f7f7;
 }
 
 input.input-error,
@@ -110,12 +110,12 @@ select.input-error {
 }
 
 input:disabled {
-  background: #f1f5f9;
+  background: #e9edf1;
   color: #64748b;
 }
 
 button {
-  background: linear-gradient(135deg, #a78bfa, #60a5fa);
+  background: linear-gradient(135deg, #a186f2, #5da0f2);
   color: white;
   border: none;
   cursor: pointer;
