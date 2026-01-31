@@ -252,7 +252,8 @@ Run frontend unit/component tests:
 
 ```bash
 cd frontend
-npm test
+npm install
+npm run test
 ```
 
 Run E2E tests (Playwright spins up the frontend on `:3000` and backend on `:4000`):
