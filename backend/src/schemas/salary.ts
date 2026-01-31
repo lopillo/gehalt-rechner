@@ -1,33 +1,11 @@
 import { z } from "zod";
+import { salaryInputSchema } from "./salaryInput";
 
 /**
- * Legacy schema definitions kept for documentation and reference.
- * These mirror the current API contract used by the backend.
+ * Re-export the centralized salary input schema for documentation and usage.
  */
-export const SalaryInputSchema = z
-  .object({
-    year: z.number().int(),
-    grossAmount: z.number().positive(),
-    period: z.enum(["monthly", "yearly"]),
-    taxClass: z.number().int().min(1).max(6),
-    federalState: z.string(), // e.g. "BW", "BY", etc.
-    churchMember: z.boolean(),
-    childrenCount: z.number().int().min(0),
-    healthInsuranceType: z.enum(["statutory", "private"]),
-    healthInsuranceRate: z.number().optional(),
-    pensionRegion: z.enum(["West", "East", "None"]),
-  })
-  .superRefine((values, ctx) => {
-    if (values.healthInsuranceType === "private" && !values.healthInsuranceRate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Private health insurance requires a rate percentage.",
-        path: ["healthInsuranceRate"],
-      });
-    }
-  });
-
-export type SalaryInput = z.infer<typeof SalaryInputSchema>;
+export { salaryInputSchema };
+export type SalaryInput = z.infer<typeof salaryInputSchema>;
 
 /**
  * Shape of the result returned to the frontend.

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ResultCard from "./components/ResultCard";
 import { SalaryInput, SalaryResult } from "./types";
 
@@ -11,6 +11,7 @@ const initialForm: SalaryInput = {
   churchMember: false,
   childrenCount: 0,
   annualAllowance: 0,
+  healthInsuranceType: "statutory",
   healthInsuranceRate: 7.3,
   pensionRegion: "West",
 };
@@ -39,6 +40,9 @@ const App = () => {
   const [result, setResult] = useState<SalaryResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<
+    Partial<Record<keyof SalaryInput, string>>
+  >({});
   const resultsRef = useRef<HTMLDivElement | null>(null);
 
   const showPrivateHealthRate = formData.healthInsuranceType === "private";
@@ -49,17 +53,83 @@ const App = () => {
         : "Statutory insurance rate (fixed)",
     [showPrivateHealthRate]
   );
+  const getFieldError = (field: keyof SalaryInput) => formErrors[field];
+
+  const validateForm = (values: SalaryInput) => {
+    const errors: Partial<Record<keyof SalaryInput, string>> = {};
+
+    if (!Number.isFinite(values.grossAmount) || values.grossAmount <= 0) {
+      errors.grossAmount = "Enter a gross amount greater than 0.";
+    }
+
+    if (
+      !Number.isFinite(values.childrenCount) ||
+      values.childrenCount < 0 ||
+      !Number.isInteger(values.childrenCount)
+    ) {
+      errors.childrenCount = "Children count must be a whole number (0 or more).";
+    }
+
+    if (
+      values.annualAllowance !== undefined &&
+      (!Number.isFinite(values.annualAllowance) || values.annualAllowance < 0)
+    ) {
+      errors.annualAllowance = "Annual allowance must be 0 or higher.";
+    }
+
+    if (
+      !Number.isFinite(values.year) ||
+      values.year < 2000 ||
+      values.year > 2100 ||
+      !Number.isInteger(values.year)
+    ) {
+      errors.year = "Choose a year between 2000 and 2100.";
+    }
+
+    if (values.healthInsuranceType === "private") {
+      if (
+        values.healthInsuranceRate === undefined ||
+        !Number.isFinite(values.healthInsuranceRate) ||
+        values.healthInsuranceRate <= 0
+      ) {
+        errors.healthInsuranceRate =
+          "Enter a private health insurance rate above 0%.";
+      } else if (values.healthInsuranceRate > 20) {
+        errors.healthInsuranceRate =
+          "Private health insurance rate should be 20% or less.";
+      }
+    }
+
+    return errors;
+  };
 
   const updateField = <K extends keyof SalaryInput>(
     field: K,
     value: SalaryInput[K]
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [field]: value };
+      setFormErrors((current) => {
+        if (Object.keys(current).length === 0) {
+          return current;
+        }
+        return validateForm(next);
+      });
+      return next;
+    });
   };
 
   // Sends the SalaryInput payload to the backend API.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const validationErrors = validateForm(formData);
+    setFormErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      setError("Please fix the highlighted fields before submitting.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -122,7 +192,15 @@ const App = () => {
                 onChange={(event) =>
                   updateField("grossAmount", Number(event.target.value))
                 }
+                className={getFieldError("grossAmount") ? "input-error" : ""}
+                aria-invalid={Boolean(getFieldError("grossAmount"))}
+                aria-describedby="gross-amount-error"
               />
+              {getFieldError("grossAmount") ? (
+                <span id="gross-amount-error" className="field-error">
+                  {getFieldError("grossAmount")}
+                </span>
+              ) : null}
             </label>
             <label>
               Period
@@ -194,7 +272,15 @@ const App = () => {
                 onChange={(event) =>
                   updateField("childrenCount", Number(event.target.value))
                 }
+                className={getFieldError("childrenCount") ? "input-error" : ""}
+                aria-invalid={Boolean(getFieldError("childrenCount"))}
+                aria-describedby="children-count-error"
               />
+              {getFieldError("childrenCount") ? (
+                <span id="children-count-error" className="field-error">
+                  {getFieldError("childrenCount")}
+                </span>
+              ) : null}
             </label>
             <label>
               Annual allowance
@@ -206,7 +292,15 @@ const App = () => {
                 onChange={(event) =>
                   updateField("annualAllowance", Number(event.target.value))
                 }
+                className={getFieldError("annualAllowance") ? "input-error" : ""}
+                aria-invalid={Boolean(getFieldError("annualAllowance"))}
+                aria-describedby="annual-allowance-error"
               />
+              {getFieldError("annualAllowance") ? (
+                <span id="annual-allowance-error" className="field-error">
+                  {getFieldError("annualAllowance")}
+                </span>
+              ) : null}
             </label>
             <label>
               Health insurance type
@@ -239,7 +333,17 @@ const App = () => {
                 }
                 disabled={!showPrivateHealthRate}
                 required={showPrivateHealthRate}
+                className={
+                  getFieldError("healthInsuranceRate") ? "input-error" : ""
+                }
+                aria-invalid={Boolean(getFieldError("healthInsuranceRate"))}
+                aria-describedby="health-rate-error"
               />
+              {getFieldError("healthInsuranceRate") ? (
+                <span id="health-rate-error" className="field-error">
+                  {getFieldError("healthInsuranceRate")}
+                </span>
+              ) : null}
             </label>
             <label>
               Pension region
@@ -267,7 +371,15 @@ const App = () => {
                 onChange={(event) =>
                   updateField("year", Number(event.target.value))
                 }
+                className={getFieldError("year") ? "input-error" : ""}
+                aria-invalid={Boolean(getFieldError("year"))}
+                aria-describedby="year-error"
               />
+              {getFieldError("year") ? (
+                <span id="year-error" className="field-error">
+                  {getFieldError("year")}
+                </span>
+              ) : null}
             </label>
             <button type="submit" disabled={loading}>
               {loading ? "Calculating..." : "Calculate net salary"}
