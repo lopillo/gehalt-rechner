@@ -10,12 +10,17 @@ export default defineConfig({
       command: "npm run dev -- --host --port 3000",
       url: "http://localhost:3000",
       reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
     },
     {
-      command: "npm run dev -- --host --port 4000",
+      command: "npm run dev",
       url: "http://localhost:4000",
       reuseExistingServer: !process.env.CI,
       cwd: "../backend",
+      env: {
+        PORT: "4000",
+      },
+      timeout: 120_000,
     },
   ],
 });
