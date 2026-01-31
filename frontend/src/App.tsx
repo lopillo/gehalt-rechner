@@ -42,7 +42,7 @@ const initialForm: SalaryInput = {
   childrenCount: 0,
   annualAllowance: 0,
   healthInsuranceType: "statutory",
-  healthInsuranceRate: 7.3,
+  healthInsuranceRate: 8.7,
   pensionRegion: getPensionRegionForState("BE"),
 };
 
@@ -86,7 +86,7 @@ const App = () => {
     () =>
       showPrivateHealthRate
         ? "Private insurance rate (%)"
-        : "Statutory insurance rate (fixed)",
+        : "Statutory insurance rate (employee share, fixed)",
     [showPrivateHealthRate]
   );
   const pensionRegionLabel = useMemo(
@@ -237,7 +237,7 @@ const App = () => {
   useEffect(() => {
     setFormData((prev) => {
       if (prev.healthInsuranceType === "statutory") {
-        return { ...prev, healthInsuranceRate: 7.3 };
+        return { ...prev, healthInsuranceRate: 8.7 };
       }
       if (!prev.healthInsuranceRate || prev.healthInsuranceRate <= 0) {
         return { ...prev, healthInsuranceRate: 12.5 };
@@ -415,7 +415,7 @@ const App = () => {
                 value={
                   showPrivateHealthRate
                     ? formData.healthInsuranceRate ?? 0
-                    : 7.3
+                    : 8.7
                 }
                 onChange={(event) =>
                   updateField("healthInsuranceRate", Number(event.target.value))

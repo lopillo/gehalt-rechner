@@ -14,7 +14,7 @@ const baseInput = {
   childrenCount: 0,
   annualAllowance: 0,
   healthInsuranceType: "statutory" as const,
-  healthInsuranceRate: 7.3,
+  healthInsuranceRate: 8.7,
   pensionRegion: "West" as const,
 };
 
@@ -35,5 +35,37 @@ describe("calculateNetSalary", () => {
 
     expect(withChurchTax.breakdown.churchTax).toBeGreaterThan(0);
     expect(withChurchTax.net).toBeLessThan(withoutChurchTax.net);
+  });
+
+  it("charges a higher nursing care rate when no children are listed", () => {
+    const withChildren = calculateNetSalary({
+      ...baseInput,
+      childrenCount: 1,
+    });
+    const withoutChildren = calculateNetSalary({
+      ...baseInput,
+      childrenCount: 0,
+    });
+
+    expect(withoutChildren.breakdown.nursingCareInsurance).toBeGreaterThan(
+      withChildren.breakdown.nursingCareInsurance
+    );
+  });
+
+  it("uses the lower church tax rate in Bavaria", () => {
+    const berlinChurchTax = calculateNetSalary({
+      ...baseInput,
+      churchMember: true,
+      federalState: "BE",
+    });
+    const bavariaChurchTax = calculateNetSalary({
+      ...baseInput,
+      churchMember: true,
+      federalState: "BY",
+    });
+
+    expect(bavariaChurchTax.breakdown.churchTax).toBeLessThan(
+      berlinChurchTax.breakdown.churchTax
+    );
   });
 });

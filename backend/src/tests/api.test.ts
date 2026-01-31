@@ -19,7 +19,7 @@ describe("POST /api/v1/salary/calculate", () => {
         childrenCount: 0,
         annualAllowance: 0,
         healthInsuranceType: "statutory",
-        healthInsuranceRate: 7.3,
+        healthInsuranceRate: 8.7,
         pensionRegion: "West",
       });
 

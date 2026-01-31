@@ -150,7 +150,7 @@ Open the app at:
   "churchMember": false,
   "childrenCount": 0,
   "annualAllowance": 0,
-  "healthInsuranceRate": 7.3,
+  "healthInsuranceRate": 8.7,
   "pensionRegion": "West"
 }
 ```
