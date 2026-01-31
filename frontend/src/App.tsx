@@ -250,7 +250,7 @@ const App = () => {
     <div className="page">
       <header>
         <h1>Gehalt Rechner</h1>
-        <p>Estimate your German net salary with an English-first calculator.</p>
+        <p>Estimate your german salary.</p>
       </header>
       <main>
         <div className="form-wrapper">
