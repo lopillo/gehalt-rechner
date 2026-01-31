@@ -59,10 +59,10 @@ const taxYearConfig: Record<number, TaxYearConfig> = {
 
 // Pick the config for the requested year or fall back to 2025.
 const getTaxConfig = (year: number): TaxYearConfig => {
-  const fallbackConfig = taxYearConfig[2025];
-  if (!fallbackConfig) {
-    throw new Error("Missing tax configuration for 2025.");
-  }
+  const fallbackConfig =
+    taxYearConfig[2025] ?? (() => {
+      throw new Error("Missing tax configuration for 2025.");
+    })();
   return taxYearConfig[year] ?? fallbackConfig;
 };
 
