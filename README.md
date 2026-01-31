@@ -256,7 +256,29 @@ npm install
 npm run test
 ```
 
-Run E2E tests (Playwright spins up the frontend on `:3000` and backend on `:4000`):
+Run E2E tests (start the frontend and backend manually, then run Playwright):
+
+```bash
+cd frontend
+npm install
+```
+
+Start the backend in a separate terminal:
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Start the frontend in another terminal:
+
+```bash
+cd frontend
+npm run dev -- --host --port 3000
+```
+
+Finally, run the E2E tests:
 
 ```bash
 cd frontend
