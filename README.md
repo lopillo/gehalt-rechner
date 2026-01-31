@@ -285,6 +285,24 @@ cd frontend
 npm run test:e2e
 ```
 
+#### Running E2E tests against Docker
+
+Playwright waits for both the frontend and backend URLs configured in
+`frontend/playwright.config.ts`. When the app runs in Docker, make sure those
+URLs resolve on your host. If `localhost` does not reach the containers (common
+with some Docker Desktop + Git Bash setups), point Playwright to the Docker host
+explicitly:
+
+```bash
+cd frontend
+E2E_FRONTEND_URL=http://host.docker.internal:3000 \
+E2E_BACKEND_URL=http://host.docker.internal:4000 \
+npm run test:e2e
+```
+
+You can keep the existing Docker Compose stack running; Playwright will reuse
+the reachable servers when `reuseExistingServer` is enabled.
+
 ---
 
 ## 🐳 Docker & Deployment
