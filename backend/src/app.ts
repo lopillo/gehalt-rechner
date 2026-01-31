@@ -25,3 +25,8 @@ app.post("/api/v1/salary/calculate", (req, res) => {
   const result = calculateNetSalary(parseResult.data);
   return res.status(200).json(result);
 });
+
+// Health endpoint for uptime checks and e2e test bootstrapping.
+app.get("/health", (_req, res) => {
+  return res.status(200).json({ status: "ok" });
+});
