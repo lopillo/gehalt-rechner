@@ -1,9 +1,11 @@
+// Unit tests for the net salary calculator.
 import { calculateNetSalary } from "../services/calculateNetSalary";
 
 /**
  * Unit tests for the salary calculation service.
  */
 
+// Base payload used across tests to keep data consistent.
 const baseInput = {
   year: 2025,
   grossAmount: 5000,
@@ -20,6 +22,7 @@ const baseInput = {
 
 describe("calculateNetSalary", () => {
   it("returns higher net for tax class 3 than tax class 1", () => {
+    // Compare two tax classes with the same input.
     const class1 = calculateNetSalary(baseInput);
     const class3 = calculateNetSalary({ ...baseInput, taxClass: 3 });
 
@@ -27,6 +30,7 @@ describe("calculateNetSalary", () => {
   });
 
   it("increases deductions when church tax is enabled", () => {
+    // Enable church tax and confirm deductions increase.
     const withoutChurchTax = calculateNetSalary(baseInput);
     const withChurchTax = calculateNetSalary({
       ...baseInput,
@@ -38,6 +42,7 @@ describe("calculateNetSalary", () => {
   });
 
   it("charges a higher nursing care rate when no children are listed", () => {
+    // Nursing care is higher for childless inputs.
     const withChildren = calculateNetSalary({
       ...baseInput,
       childrenCount: 1,
@@ -53,6 +58,7 @@ describe("calculateNetSalary", () => {
   });
 
   it("uses the lower church tax rate in Bavaria", () => {
+    // Bavaria uses a lower church tax rate than Berlin.
     const berlinChurchTax = calculateNetSalary({
       ...baseInput,
       churchMember: true,

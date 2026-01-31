@@ -1,3 +1,4 @@
+// Integration-style tests for the main App component.
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
@@ -9,6 +10,7 @@ import App from "../App";
 
 describe("App", () => {
   it("submits the form with the expected payload", async () => {
+    // Mock fetch to capture the outgoing request.
     const user = userEvent.setup();
     const fetchSpy = vi.fn().mockResolvedValue({
       ok: true,
@@ -29,6 +31,7 @@ describe("App", () => {
     // @ts-expect-error test override
     global.fetch = fetchSpy;
 
+    // Render the form and submit it.
     render(<App />);
 
     const grossInput = screen.getByLabelText(/gross amount/i);
@@ -39,6 +42,7 @@ describe("App", () => {
       screen.getByRole("button", { name: /calculate net salary/i })
     );
 
+    // Verify the request contains expected values.
     expect(fetchSpy).toHaveBeenCalledWith(
       "/api/v1/salary/calculate",
       expect.objectContaining({

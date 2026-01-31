@@ -1,3 +1,4 @@
+// Core calculation logic for net salary and deductions.
 import { SalaryInput, SalaryResult } from "../types";
 
 /**
@@ -5,6 +6,7 @@ import { SalaryInput, SalaryResult } from "../types";
  * The logic aims to mimic German payroll rules but remains simplified.
  */
 
+// Fixed values and rates used in the simplified model.
 const STATUTORY_HEALTH_RATE = 8.7;
 const STANDARD_EMPLOYEE_ALLOWANCE = 1230;
 const STANDARD_SPECIAL_EXPENSE_ALLOWANCE = 36;
@@ -15,6 +17,7 @@ const UNEMPLOYMENT_RATE = 1.3;
 const PENSION_RATE = 9.3;
 const SOLIDARITY_RATE = 0.055;
 
+// Tax bracket configuration for a specific year.
 type TaxYearConfig = {
   basicAllowance: number;
   bracketEnd1: number;
@@ -33,6 +36,7 @@ type TaxYearConfig = {
   contributionCapPensionEast: number;
 };
 
+// Lookup table for yearly tax configuration.
 const taxYearConfig: Record<number, TaxYearConfig> = {
   2025: {
     basicAllowance: 11604,
@@ -53,12 +57,15 @@ const taxYearConfig: Record<number, TaxYearConfig> = {
   },
 };
 
+// Pick the config for the requested year or fall back to 2025.
 const getTaxConfig = (year: number): TaxYearConfig =>
   taxYearConfig[year] ?? taxYearConfig[2025];
 
+// Round to two decimal places for currency output.
 const roundCurrency = (value: number) =>
   Math.round((value + Number.EPSILON) * 100) / 100;
 
+// Tax class settings used for income tax adjustments.
 const taxClassConfig: Record<
   SalaryInput["taxClass"],
   { allowanceAdjustment: number; multiplier: number; useSplitting: boolean }
@@ -89,6 +96,7 @@ const getChurchTaxRate = (federalState: SalaryInput["federalState"]) =>
 const getPensionRate = (region: SalaryInput["pensionRegion"]) =>
   region === "None" ? 0 : PENSION_RATE;
 
+// Return yearly contribution caps for health and pension/unemployment.
 const getContributionCap = (input: SalaryInput, config: TaxYearConfig) => {
   const pensionCap =
     input.pensionRegion === "East"
@@ -102,11 +110,13 @@ const getContributionCap = (input: SalaryInput, config: TaxYearConfig) => {
   };
 };
 
+// Nursing care rate depends on whether there are children.
 const getNursingCareRate = (childrenCount: number) =>
   childrenCount > 0
     ? NURSING_CARE_BASE_RATE
     : NURSING_CARE_BASE_RATE + NURSING_CARE_CHILDLESS_SURCHARGE;
 
+// Income tax calculation based on tax brackets.
 const getIncomeTaxForYear = (taxableIncome: number, config: TaxYearConfig) => {
   if (taxableIncome <= config.basicAllowance) {
     return 0;
@@ -125,6 +135,7 @@ const getIncomeTaxForYear = (taxableIncome: number, config: TaxYearConfig) => {
   return 0.45 * taxableIncome - 18936.88;
 };
 
+// Solidarity tax applies above a free limit.
 const getSolidarityTax = (incomeTax: number, config: TaxYearConfig) =>
   incomeTax <= config.solidarityFreeLimit ? 0 : incomeTax * SOLIDARITY_RATE;
 
@@ -133,6 +144,7 @@ const getSolidarityTax = (incomeTax: number, config: TaxYearConfig) =>
  * This is an educational model and not official tax advice.
  */
 export const calculateNetSalary = (input: SalaryInput): SalaryResult => {
+  // 1) Prepare inputs and yearly settings.
   const config = getTaxConfig(input.year);
   const allowance = input.annualAllowance ?? 0;
   const annualGross =
@@ -142,16 +154,19 @@ export const calculateNetSalary = (input: SalaryInput): SalaryResult => {
     input.healthInsuranceType === "private"
       ? input.healthInsuranceRate ?? 0
       : STATUTORY_HEALTH_RATE;
+  // 2) Cap gross salary for insurance contributions.
   const cappedHealthBase = Math.min(annualGross, caps.health);
   const cappedPensionBase = Math.min(annualGross, caps.pension);
   const cappedUnemploymentBase = Math.min(annualGross, caps.unemployment);
 
+  // 3) Calculate insurance contributions.
   const healthInsurance = cappedHealthBase * (healthRate / 100);
   const pensionInsurance = cappedPensionBase * (getPensionRate(input.pensionRegion) / 100);
   const unemploymentInsurance = cappedUnemploymentBase * (UNEMPLOYMENT_RATE / 100);
   const nursingCareInsurance =
     cappedHealthBase * (getNursingCareRate(input.childrenCount) / 100);
 
+  // 4) Calculate taxable income and income taxes.
   const baseTaxableIncome =
     annualGross -
     allowance -
@@ -172,6 +187,7 @@ export const calculateNetSalary = (input: SalaryInput): SalaryResult => {
     ? incomeTax * getChurchTaxRate(input.federalState)
     : 0;
 
+  // 5) Sum up deductions and compute the net salary.
   const totalDeductions =
     incomeTax +
     solidarityTax +
@@ -184,6 +200,7 @@ export const calculateNetSalary = (input: SalaryInput): SalaryResult => {
   const netAnnual = annualGross - totalDeductions;
   const divisor = input.period === "monthly" ? 12 : 1;
 
+  // 6) Return the result as monthly or yearly values.
   return {
     net: roundCurrency(netAnnual / divisor),
     breakdown: {

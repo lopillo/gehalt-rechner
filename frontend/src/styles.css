@@ -1,27 +1,32 @@
 /**
  * Pastel-inspired visual styling for the salary calculator SPA.
  */
+/* Global theme and base typography. */
 :root {
   font-family: "Inter", system-ui, sans-serif;
   color: #1e1b4b;
   background: linear-gradient(160deg, #f6ebc1 0%, #d4e2f6 45%, #f4e0eb 100%);
 }
 
+/* Make box sizing predictable across elements. */
 * {
   box-sizing: border-box;
 }
 
+/* Base page layout styles. */
 body {
   margin: 0;
   min-height: 100vh;
 }
 
+/* Main page container. */
 .page {
   max-width: 960px;
   margin: 0 auto;
   padding: 40px 20px 90px;
 }
 
+/* Header and title styles. */
 header {
   text-align: center;
   margin-bottom: 32px;
@@ -37,17 +42,20 @@ header p {
   margin: 0;
 }
 
+/* Stack the main layout sections. */
 main {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
+/* Center the form card. */
 .form-wrapper {
   display: flex;
   justify-content: center;
 }
 
+/* Card styling shared by form and results. */
 .card {
   background: rgba(247, 247, 247, 0.86);
   border-radius: 20px;
@@ -57,10 +65,12 @@ main {
   backdrop-filter: blur(10px);
 }
 
+/* Form card width constraints. */
 .form-card {
   width: min(720px, 100%);
 }
 
+/* Form label layout. */
 form label {
   display: flex;
   flex-direction: column;
@@ -69,6 +79,7 @@ form label {
   margin-bottom: 16px;
 }
 
+/* Inputs that include a suffix such as the Euro sign. */
 .input-with-suffix {
   display: flex;
   align-items: center;
@@ -79,11 +90,13 @@ form label {
   flex: 1;
 }
 
+/* Styling for the suffix text next to inputs. */
 .input-suffix {
   font-weight: 600;
   color: #4b5563;
 }
 
+/* Base input, select, and button styles. */
 input,
 select,
 button {
@@ -94,11 +107,13 @@ button {
   background: #f7f7f7;
 }
 
+/* Highlight invalid fields. */
 input.input-error,
 select.input-error {
   border-color: #ef4444;
 }
 
+/* Error and hint text. */
 .field-error {
   color: #b91c1c;
   font-size: 0.85rem;
@@ -109,11 +124,13 @@ select.input-error {
   font-size: 0.85rem;
 }
 
+/* Disabled field styling. */
 input:disabled {
   background: #e9edf1;
   color: #64748b;
 }
 
+/* Primary button styling. */
 button {
   background: linear-gradient(135deg, #a186f2, #5da0f2);
   color: white;
@@ -122,22 +139,26 @@ button {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Hover effect for active buttons. */
 button:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(96, 165, 250, 0.4);
 }
 
+/* Disabled button state. */
 button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
+/* Checkbox row alignment. */
 .checkbox {
   flex-direction: row;
   align-items: center;
   gap: 12px;
 }
 
+/* Result section spacing and alignment. */
 .results-section {
   display: flex;
   justify-content: center;
@@ -149,12 +170,14 @@ button:disabled {
   animation: slideUp 0.6s ease;
 }
 
+/* Highlight the net salary number. */
 .net {
   font-size: 2rem;
   font-weight: 600;
   margin: 12px 0 20px;
 }
 
+/* Breakdown list styling. */
 .breakdown {
   list-style: none;
   padding: 0;
@@ -163,22 +186,26 @@ button:disabled {
   gap: 8px;
 }
 
+/* Small disclaimer text under results. */
 .result-disclaimer {
   margin-top: 16px;
   font-size: 0.9rem;
   color: #6b7280;
 }
 
+/* Error message styling. */
 .error {
   color: #b91c1c;
   margin-top: 12px;
 }
 
+/* Placeholder text for empty states. */
 .placeholder {
   text-align: center;
   color: #6b7280;
 }
 
+/* Simple fade/slide animation for results. */
 @keyframes slideUp {
   from {
     opacity: 0;
