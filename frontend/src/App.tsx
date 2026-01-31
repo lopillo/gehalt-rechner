@@ -243,7 +243,7 @@ const App = () => {
 
   // Scroll to the result card after a successful calculation.
   useEffect(() => {
-    if (result && resultsRef.current) {
+    if (result && resultsRef.current?.scrollIntoView) {
       resultsRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [result]);
