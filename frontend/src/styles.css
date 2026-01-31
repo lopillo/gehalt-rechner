@@ -74,6 +74,16 @@ button {
   background: #ffffff;
 }
 
+input.input-error,
+select.input-error {
+  border-color: #ef4444;
+}
+
+.field-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
 input:disabled {
   background: #f1f5f9;
   color: #64748b;
@@ -126,6 +136,12 @@ button:disabled {
   margin: 0;
   display: grid;
   gap: 8px;
+}
+
+.result-disclaimer {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
 .error {

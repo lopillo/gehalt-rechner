@@ -172,6 +172,27 @@ Open the app at:
 }
 ```
 
+### API error handling
+
+If validation fails, the API returns a `400` response with a message and an array
+of Zod issues.
+
+```json
+{
+  "message": "Invalid input data",
+  "issues": [
+    {
+      "code": "too_small",
+      "minimum": 0,
+      "type": "number",
+      "inclusive": true,
+      "message": "Number must be greater than 0",
+      "path": ["grossAmount"]
+    }
+  ]
+}
+```
+
 ---
 
 ## ✅ Tests

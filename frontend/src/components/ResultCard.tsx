@@ -38,6 +38,10 @@ const ResultCard = ({ result }: ResultCardProps) => {
           {formatCurrency(breakdown.nursingCareInsurance)}
         </li>
       </ul>
+      <p className="result-disclaimer">
+        Figures are based on a simplified model and intended for quick estimates
+        only.
+      </p>
     </section>
   );
 };
