@@ -224,11 +224,42 @@ Alternative minimal example:
 
 ## ✅ Tests
 
-Backend tests:
+### Backend
+
+The backend suite includes **unit** and **integration** tests (Jest + Supertest).
+
+Run all backend tests:
 
 ```bash
 cd backend
 npm test
+```
+
+Run a specific backend test file:
+
+```bash
+cd backend
+npm test -- calculateNetSalary.test.ts
+npm test -- api.test.ts
+```
+
+### Frontend
+
+Frontend tests include **unit/component** tests (Vitest + Testing Library) and
+**end-to-end (E2E)** tests (Playwright).
+
+Run frontend unit/component tests:
+
+```bash
+cd frontend
+npm test
+```
+
+Run E2E tests (Playwright spins up the frontend on `:3000` and backend on `:4000`):
+
+```bash
+cd frontend
+npm run test:e2e
 ```
 
 ---
