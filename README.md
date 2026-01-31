@@ -120,7 +120,7 @@ The application is implemented as a **full-stack system**, fully containerized u
 
 ## 🚀 Quick Start
 
-Run the full stack locally with Docker Compose:
+Run the full stack locally with Docker Compose (this starts the frontend and backend containers):
 
 ```bash
 docker-compose up --build
@@ -129,6 +129,13 @@ docker-compose up --build
 Open the app at:
 
 - http://localhost:3000
+
+To stop the app and return to your shell, press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the
+terminal running Docker Compose. To fully shut down and remove containers, run:
+
+```bash
+docker-compose down
+```
 
 ---
 
