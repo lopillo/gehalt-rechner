@@ -1,10 +1,13 @@
+// End-to-end tests for the salary calculator UI.
 import { expect, test } from "@playwright/test";
 
 test("submits the salary form and shows net salary results", async ({ page }) => {
+  // Use defaults and submit the form.
   await page.goto("/");
 
   await page.getByRole("button", { name: "Calculate net salary" }).click();
 
+  // Confirm the result section appears.
   await expect(page.getByRole("heading", { name: "Estimated Net Salary" })).toBeVisible();
   await expect(page.getByText(/Income tax:/)).toBeVisible();
   await expect(page.getByText(/Church tax:/)).toBeVisible();
@@ -13,6 +16,7 @@ test("submits the salary form and shows net salary results", async ({ page }) =>
 test("submits a customized salary form and renders a result breakdown", async ({
   page,
 }) => {
+  // Fill out a full custom scenario.
   await page.goto("/");
 
   await page.getByLabel("Gross amount").fill("6500");
@@ -29,6 +33,7 @@ test("submits a customized salary form and renders a result breakdown", async ({
 
   await page.getByRole("button", { name: "Calculate net salary" }).click();
 
+  // Verify the breakdown is visible.
   await expect(page.getByRole("heading", { name: "Estimated Net Salary" })).toBeVisible();
   await expect(page.locator(".results-section .net")).toContainText("€");
   await expect(page.getByText(/Income tax:/)).toBeVisible();
