@@ -8,7 +8,29 @@ import {
 } from "react";
 import ResultCard from "./components/ResultCard";
 import { formatMoneyValue, parseMoneyValue } from "./utils/formatters";
-import { SalaryInput, SalaryResult } from "./types";
+import { FederalState, PensionRegion, SalaryInput, SalaryResult } from "./types";
+
+const pensionRegionByState: Record<FederalState, PensionRegion> = {
+  BW: "West",
+  BY: "West",
+  BE: "East",
+  BB: "East",
+  HB: "West",
+  HH: "West",
+  HE: "West",
+  MV: "East",
+  NI: "West",
+  NW: "West",
+  RP: "West",
+  SL: "West",
+  SN: "East",
+  ST: "East",
+  SH: "West",
+  TH: "East",
+};
+
+const getPensionRegionForState = (state: FederalState): PensionRegion =>
+  pensionRegionByState[state];
 
 const initialForm: SalaryInput = {
   year: 2025,
@@ -21,7 +43,7 @@ const initialForm: SalaryInput = {
   annualAllowance: 0,
   healthInsuranceType: "statutory",
   healthInsuranceRate: 7.3,
-  pensionRegion: "West",
+  pensionRegion: getPensionRegionForState("BE"),
 };
 
 const federalStates = [
@@ -66,6 +88,10 @@ const App = () => {
         ? "Private insurance rate (%)"
         : "Statutory insurance rate (fixed)",
     [showPrivateHealthRate]
+  );
+  const pensionRegionLabel = useMemo(
+    () => getPensionRegionForState(formData.federalState),
+    [formData.federalState]
   );
   const getFieldError = (field: keyof SalaryInput) => formErrors[field];
 
@@ -117,12 +143,9 @@ const App = () => {
     return errors;
   };
 
-  const updateField = <K extends keyof SalaryInput>(
-    field: K,
-    value: SalaryInput[K]
-  ) => {
+  const updateFields = (updates: Partial<SalaryInput>) => {
     setFormData((prev) => {
-      const next = { ...prev, [field]: value };
+      const next = { ...prev, ...updates };
       setFormErrors((current) => {
         if (Object.keys(current).length === 0) {
           return current;
@@ -130,6 +153,23 @@ const App = () => {
         return validateForm(next);
       });
       return next;
+    });
+  };
+
+  const updateField = <K extends keyof SalaryInput>(
+    field: K,
+    value: SalaryInput[K]
+  ) => {
+    updateFields({ [field]: value } as Partial<SalaryInput>);
+  };
+
+  const handleFederalStateChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const nextState = event.target.value as SalaryInput["federalState"];
+    updateFields({
+      federalState: nextState,
+      pensionRegion: getPensionRegionForState(nextState),
     });
   };
 
@@ -279,12 +319,7 @@ const App = () => {
               Bundesland
               <select
                 value={formData.federalState}
-                onChange={(event) =>
-                  updateField(
-                    "federalState",
-                    event.target.value as SalaryInput["federalState"]
-                  )
-                }
+                onChange={handleFederalStateChange}
               >
                 {federalStates.map((state) => (
                   <option key={state.code} value={state.code}>
@@ -292,6 +327,9 @@ const App = () => {
                   </option>
                 ))}
               </select>
+              <span className="field-hint" aria-live="polite">
+                Pension region: {pensionRegionLabel} (auto)
+              </span>
             </label>
             <label className="checkbox">
               <input
@@ -395,22 +433,6 @@ const App = () => {
                   {getFieldError("healthInsuranceRate")}
                 </span>
               ) : null}
-            </label>
-            <label>
-              Pension region
-              <select
-                value={formData.pensionRegion}
-                onChange={(event) =>
-                  updateField(
-                    "pensionRegion",
-                    event.target.value as SalaryInput["pensionRegion"]
-                  )
-                }
-              >
-                <option value="West">West</option>
-                <option value="East">East</option>
-                <option value="None">None</option>
-              </select>
             </label>
             <label>
               Calculation year
