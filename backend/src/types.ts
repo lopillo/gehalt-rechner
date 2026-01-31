@@ -33,7 +33,8 @@ export interface SalaryInput {
   churchMember: boolean;
   childrenCount: number;
   annualAllowance?: number | undefined;
-  healthInsuranceRate: number;
+  healthInsuranceType: "statutory" | "private";
+  healthInsuranceRate?: number | undefined;
   pensionRegion: PensionRegion;
 }
 
