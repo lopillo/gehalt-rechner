@@ -39,8 +39,7 @@ const ResultCard = ({ result }: ResultCardProps) => {
         </li>
       </ul>
       <p className="result-disclaimer">
-        Figures are based on a simplified model and intended for quick estimates
-        only.
+        This calculator uses a simplified model; actual net pay may vary.
       </p>
     </section>
   );
